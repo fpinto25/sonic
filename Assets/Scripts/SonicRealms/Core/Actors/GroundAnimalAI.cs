@@ -55,7 +55,7 @@ namespace SonicRealms.Core.Actors
             Controller = GetComponent<HedgehogController>();
             Animator = Controller ? Controller.Animator : GetComponent<Animator>();
 
-            FacingRight = Random.value < 0.5f;
+            FacingRight = UnityEngine.Random.value < 0.5f;
             RunSpeed = 3.6f;
             JumpSpeed = 2.1f;
 

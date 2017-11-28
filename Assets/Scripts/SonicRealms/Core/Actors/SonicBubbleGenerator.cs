@@ -90,21 +90,21 @@ namespace SonicRealms.Core.Actors
 
         protected IEnumerator SpawnBubbles()
         {
-            yield return new WaitForSeconds(Random.Range(0f, 1f/SpawnRate));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 1f/SpawnRate));
             while (true)
             {
                 Instantiate(Bubble).transform.position = transform.position;
-                yield return new WaitForSeconds(Random.Range(0.5f/SpawnRate, 1.5f/SpawnRate));
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f/SpawnRate, 1.5f/SpawnRate));
             }
         }
 
         protected IEnumerator SpawnDrownedBubbles()
         {
-            yield return new WaitForSeconds(Random.Range(0f, 1f/MediumBubbleSpawnRate));
+            yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 1f/MediumBubbleSpawnRate));
             while (true)
             {
                 Instantiate(MediumBubble).transform.position = transform.position;
-                yield return new WaitForSeconds(Random.Range(0.5f/MediumBubbleSpawnRate, 1.5f/MediumBubbleSpawnRate));
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f/MediumBubbleSpawnRate, 1.5f/MediumBubbleSpawnRate));
             }
         }
     }

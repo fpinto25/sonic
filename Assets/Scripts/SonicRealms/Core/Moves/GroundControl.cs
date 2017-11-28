@@ -105,7 +105,7 @@ namespace SonicRealms.Core.Moves
                  "steep slopes.")]
         public float MinSlopeGravitySpeed;
         #endregion
-        
+
         #region Properties
         /// <summary>
         /// Whether the controller is accelerating.
@@ -161,13 +161,18 @@ namespace SonicRealms.Core.Moves
         /// Whether the control lock is on.
         /// </summary>
         public bool ControlLockTimerOn;
-        
+
         /// <summary>
         /// Time until the control lock is switched off, in seconds. Set to zero if the control is not locked.
         /// </summary>
         public float ControlLockTimer;
 
         protected ScoreCounter Score;
+
+        //agregado por fer
+        Nmove move = new Nmove();
+        Markov auxmark = new Markov();
+
 
         public override MoveLayer Layer
         {
@@ -218,21 +223,24 @@ namespace SonicRealms.Core.Moves
         public void OnAttach()
         {
             Perform();
-            if(Score) Score.EndCombo();
+            if (Score) Score.EndCombo();
         }
 
         public override void OnActiveEnter(State previousState)
         {
+            float aux2move = move.getAle();
             Manager.End<AirControl>();
             Controller.OnSteepDetach.AddListener(OnSteepDetach);
 
-            _axis = InvertAxis ? -Input.GetAxis(MovementAxis) : Input.GetAxis(MovementAxis);
+            // _axis = InvertAxis ? -Input.GetAxis(MovementAxis) : Input.GetAxis(MovementAxis);
+            _axis = aux2move;
         }
 
         public override void OnActiveUpdate()
         {
+            float auxmove = move.getAle();
             if (ControlLockTimerOn || DisableControl) return;
-            _axis = InvertAxis ? -Input.GetAxis(MovementAxis) : Input.GetAxis(MovementAxis);
+            _axis = auxmove;
         }
 
         public override void OnActiveFixedUpdate()
@@ -241,7 +249,7 @@ namespace SonicRealms.Core.Moves
 
             // Accelerate as long as the control lock isn't on
             if (!ControlLockTimerOn) Accelerate(_axis);
-            
+
             // If we're on a wall and aren't going quickly enough, start the control lock
             if (Mathf.Abs(Controller.GroundVelocity) < Controller.DetachSpeed &&
                 DMath.AngleInRange_d(Controller.RelativeSurfaceAngle, 50.0f, 310.0f))
@@ -252,7 +260,7 @@ namespace SonicRealms.Core.Moves
                                            Mathf.Abs(Controller.GroundVelocity) > MinSlopeGravitySpeed);
 
             // Disable ground friction while we have player input
-            Controller.DisableGroundFriction = 
+            Controller.DisableGroundFriction =
                 (!DisableAcceleration && Accelerating) ||
                 (!DisableDeceleration && Braking);
 
@@ -276,20 +284,20 @@ namespace SonicRealms.Core.Moves
 
         public override void SetAnimatorParameters()
         {
-            if(InputAxisFloatHash != 0)
+            if (InputAxisFloatHash != 0)
                 Animator.SetFloat(InputAxisFloatHash, _axis);
 
-            if(InputBoolHash != 0)
+            if (InputBoolHash != 0)
                 Animator.SetBool(InputBoolHash, !DMath.Equalsf(_axis));
 
-            if(AcceleratingBoolHash != 0)
+            if (AcceleratingBoolHash != 0)
                 Animator.SetBool(AcceleratingBoolHash, Accelerating);
 
-            if(BrakingBoolHash != 0)
+            if (BrakingBoolHash != 0)
                 Animator.SetBool(BrakingBoolHash, Braking);
 
-            if(TopSpeedPercentFloatHash != 0)
-                Animator.SetFloat(TopSpeedPercentFloatHash, Mathf.Abs(Controller.GroundVelocity)/TopSpeed);
+            if (TopSpeedPercentFloatHash != 0)
+                Animator.SetFloat(TopSpeedPercentFloatHash, Mathf.Abs(Controller.GroundVelocity) / TopSpeed);
         }
 
         public void OnSteepDetach()
@@ -378,12 +386,12 @@ namespace SonicRealms.Core.Moves
             {
                 if (!DisableDeceleration && Controller.GroundVelocity > 0.0f)
                 {
-                    Controller.GroundVelocity += Deceleration*magnitude*timestep;
+                    Controller.GroundVelocity += Deceleration * magnitude * timestep;
                     return true;
                 }
                 else if (!DisableAcceleration && Controller.GroundVelocity > -TopSpeed)
                 {
-                    Controller.GroundVelocity += Acceleration*magnitude*timestep;
+                    Controller.GroundVelocity += Acceleration * magnitude * timestep;
                     return true;
                 }
             }
@@ -391,17 +399,62 @@ namespace SonicRealms.Core.Moves
             {
                 if (!DisableDeceleration && Controller.GroundVelocity < 0.0f)
                 {
-                    Controller.GroundVelocity += Deceleration*magnitude*timestep;
+                    Controller.GroundVelocity += Deceleration * magnitude * timestep;
                     return true;
                 }
                 else if (!DisableAcceleration && Controller.GroundVelocity < TopSpeed)
                 {
-                    Controller.GroundVelocity += Acceleration*magnitude*timestep;
+                    Controller.GroundVelocity += Acceleration * magnitude * timestep;
                     return true;
                 }
             }
 
             return false;
         }
+    }
+
+    class Nmove
+    {
+        public float ale;
+        public float getAle()
+        {
+            int n = UnityEngine.Random.Range(0, 1);
+            int dec = UnityEngine.Random.Range(0, 9999);
+            string cadena = n.ToString() + "." + dec.ToString();
+            float Ale = System.Convert.ToSingle(cadena);
+            float I1 = 2 * Ale;
+            float I2 = I1 / 2;
+            ale = I2;
+            System.Console.Write(cadena);
+            return ale;
+        }
+        /*private int ale;
+        public int getAle()
+        {
+            int Ale = UnityEngine.Random.Range(0, 2); 
+            int I1 = 2 * Ale;
+            int I2 = I1 / 2;
+            ale = I2;
+            return ale;
+        }*/
+
+    }
+
+    class Markov
+    {
+        int i,j;
+        public int getMark()
+        {
+            for (i = 0; i <= 2; i++)
+            {
+                for(j = 0; j <=2; j++)
+                {
+
+                }
+
+            }
+            return 0;
+        }
+       
     }
 }

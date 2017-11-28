@@ -79,7 +79,7 @@ namespace SonicRealms.Core.Actors
 
         public void Awake()
         {
-            WiggleTimer = Random.Range(0, WiggleTime);
+            WiggleTimer = UnityEngine.Random.Range(0, WiggleTime);
             Animator = Animator ? Animator : GetComponent<Animator>();
             PopTriggerHash = Animator.StringToHash(PopTrigger);
         }
